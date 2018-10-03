@@ -1,22 +1,13 @@
 #pragma once
 #include <iomanip>
-
+#include "NodeCommon.h"
 namespace DS
 {
 template <class T>
 class SingleLinkedList
 {
   private:
-    struct Node
-    {
-        T data = {};
-        Node *next = {};
-        ~Node()
-        {
-            delete this->next;
-        }
-        Node(const T &datapar) : data(datapar) {}
-    };
+    using Node = NodeCommon<T>;
     Node *head = {};
     Node *tail = {};
 

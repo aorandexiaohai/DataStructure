@@ -1,30 +1,26 @@
 #pragma once
-
 #include "NodeCommon.h"
-
+#include <cassert>
 namespace DS
 {
 template <class T>
-class DoubleLinkedList
+class LoopLinkedList
 {
   private:
-    struct Node
-    {
-        T data = {};
-        Node * prev = {};
-        Node * next = {};
-        ~Node()
-        {
-            delete this->next;
-        }
-        Node(const T &datapar) : data(datapar) {}
-    };
+    using Node = NodeCommon<T>;
     Node *head = {};
     Node *tail = {};
+    static void CorrectTail(LoopLinkedList* lll)
+    {
+        lll->tail->next = lll->head;
+    }
 
   public:
-    ~DoubleLinkedList()
+    ~LoopLinkedList()
     {
+        //avoid recursive deletion
+        if(tail)
+            tail->next = nullptr;
         delete this->head;
     }
     bool Empty()
@@ -35,30 +31,31 @@ class DoubleLinkedList
     {
         if (Empty())
         {
-            head = new Node(data);
-            tail = head;
+            tail = head = new Node(data);
+            CorrectTail(this);
         }
         else
         {
-            auto real_head = new Node(data);
-            real_head->next = head;
-            head->prev = real_head;
+            auto real_head = new Node(data, head);
             head = real_head;
+
+            CorrectTail(this);
         }
     }
     void AddToTail(const T &data)
     {
         if (Empty())
         {
-            head = new Node(data);
-            tail = head;
+            tail = head = new Node(data);
+            CorrectTail(this);
         }
         else
         {
-            auto real_tail  = new Node(data);
-            tail->next      = real_tail;
-            real_tail->prev = tail;
+            auto real_tail = new Node(data);
+            tail->next = real_tail;
             tail = real_tail;
+
+            CorrectTail(this);
         }
     }
     bool DeleteFromHead(T &result)
@@ -68,20 +65,17 @@ class DoubleLinkedList
         else
         {
             auto result_node = head;
-            if (!head->next)
+            result = result_node->data;
+            if (head == tail)
             {
                 head = tail = nullptr;
             }
             else
             {
                 head = head->next;
-                head->prev = nullptr;
+                CorrectTail(this);
             }
-            result = result_node->data;
-
-            //avoid recursive deletion
-            result_node->next = nullptr;
-            delete result_node;
+            NodeCommon<T>::DeleteSingleNode(result_node);
         }
     }
     bool DeleteFromTail(T &result)
@@ -90,22 +84,31 @@ class DoubleLinkedList
             return false;
         else
         {
-            auto result_node = tail;
-            if(!tail->prev)
+            Node *pre_tail = head;
+            while (pre_tail &&(pre_tail!=tail) && (pre_tail->next != tail))
             {
+                pre_tail = pre_tail->next;
+            }
+
+            if (pre_tail == tail)
+            {
+                result = tail->data;
+                NodeCommon<T>::DeleteSingleNode(tail);
                 head = tail = nullptr;
             }
             else
             {
-                tail = tail->prev;
-                tail->next = nullptr;
+                if(!pre_tail)
+                    assert(!pre_tail);
+                pre_tail->next = nullptr;
+                result = tail->data;
+                
+                NodeCommon<T>::DeleteSingleNode(tail);
+                tail = pre_tail;
+
+                CorrectTail(this);
             }
-
-            result = result_node->data;
-
-            //avoid recursive deletion
-            result_node->next = nullptr;
-            delete result_node;
+            return true;
         }
     }
     bool DeleteElement(const T &ele)
@@ -115,16 +118,14 @@ class DoubleLinkedList
         if (ElementIsIn(ele, &pre_node, &cur_node))
         {
             auto next_node = cur_node->next;
+            if(cur_node==tail)
+                next_node = nullptr;
             if (pre_node)
             {
                 pre_node->next = next_node;
                 if(!next_node)
                 {
                     tail = pre_node;
-                }
-                else
-                {
-                    next_node->prev = pre_node;
                 }
             }
             else
@@ -136,12 +137,11 @@ class DoubleLinkedList
                 else
                 {
                     head = next_node;
-                    head->prev = nullptr;
                 }
             }
-
-            cur_node->next = nullptr;
-            delete cur_node;
+            if(!Empty())
+                CorrectTail(this);
+            NodeCommon<T>::DeleteSingleNode(cur_node);
             return true;
         }
         return false;
@@ -157,6 +157,10 @@ class DoubleLinkedList
         {
             if (pre_node_ptr)
                 *pre_node_ptr = tmp;
+            if(tmp==tail)
+            {
+                return false;
+            }
             tmp = tmp->next;
         }
         if (tmp)
@@ -174,6 +178,8 @@ class DoubleLinkedList
         {
             os << tmp->data << spliter;
             tmp = tmp->next;
+            if(tmp==tail)
+                break;
         }
         return os;
     }
