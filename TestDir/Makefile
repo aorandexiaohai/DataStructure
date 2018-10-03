@@ -1,2 +1,2 @@
-test_main.exe : test_main.cpp SingleLinkedList.h DoubleLinkedList.h LoopLinkedList.h NodeCommon.h
-	g++ test_main.cpp -g -o test_main -Wreturn-type
+test_main.exe : test_main.cpp ../LinkedList/SingleLinkedList.h ../LinkedList/DoubleLinkedList.h ../LinkedList/LoopLinkedList.h ../LinkedList/NodeCommon.h
+	g++ test_main.cpp -g -o test_main -Wreturn-type -I../LinkedList
