@@ -1,0 +1,3 @@
+[submodule "XTUtils"]
+	path = XTUtils
+	url = https://github.com/aorandexiaohai/XTUtils.git

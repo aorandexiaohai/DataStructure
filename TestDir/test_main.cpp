@@ -9,6 +9,8 @@
 #include <string>
 #include <algorithm>
 
+#include "ParameterParse.h"
+
 int TestCase = 100;
 int TestRange = 100;
 
@@ -28,19 +30,22 @@ static char* CommandList[] = {
     "DeleteFromTail",
     "DeleteElement"
 };
+#define CONFIG_STR_DEFINE(str) \
+    const std::string str = "--"#str;
 int main(int argc, char** argv)
 {
-    std::vector<std::string> par_vec;
-    for(int index=1; index<argc; index++)
-    {
-        par_vec.push_back(argv[index]);
-    }
-    if(std::find(par_vec.begin(), par_vec.end(), "--longtest") != par_vec.end())
+    CONFIG_STR_DEFINE(longtest);
+    CONFIG_STR_DEFINE(longlongtest);
+
+    DS::global_config.Init(argc, argv);
+
+
+    if(DS::global_config.EnableValue(longtest))
     {
         TestCase*=TestCase;
         TestRange=TestCase;
     }
-    else if(std::find(par_vec.begin(), par_vec.end(), "--longlongtest") != par_vec.end())
+    if(DS::global_config.EnableValue(longlongtest))
     {
         TestCase*=(TestCase*10);
         TestRange=TestCase;
