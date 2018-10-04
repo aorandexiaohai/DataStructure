@@ -27,7 +27,7 @@ class DoubleLinkedList
     {
         delete this->head;
     }
-    bool Empty()
+    bool Empty() const
     {
         return head == nullptr;
     }
