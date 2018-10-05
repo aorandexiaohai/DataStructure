@@ -12,9 +12,7 @@ struct BSNode
     T data = {};
     BSNode *left = {};
     BSNode *right = {};
-    BSNode(const T &data_par)
-        : data(data_par) {}
-    BSNode(const T &data_par, BSNode *left_par, BSNode *right_par)
+    BSNode(const T &data_par, BSNode *left_par = nullptr, BSNode *right_par = nullptr)
         : data(data_par), left(left_par), right(right_par) {}
     ~BSNode()
     {
@@ -27,9 +25,9 @@ struct BSNode
         node->right = nullptr;
         delete node;
     }
-    static void Visit(BSNode *p, const std::string& spliter=" ") const
+    static void Visit(BSNode *p, const std::string &spliter = " ") const
     {
-        std::cout  << p->data <<spliter << std::endl;
+        std::cout << p->data << spliter << std::endl;
     }
 };
 template <class T>
@@ -99,7 +97,41 @@ class BSTree
     void IterativeAfterOrder();
 
     void MorrisInOrder();
-    void Insert(const T &t);
+    void Insert(const T &t)
+    {
+        auto p = root;
+        if (!p)
+        {
+            root = new Node(t);
+            return;
+        }
+        else
+        {
+            while (p)
+            {
+                if (t < p->data)
+                {
+                    if (p->left)
+                        p = p->left;
+                    else
+                    {
+                        p->left = new Node(t);
+                        return;
+                    }
+                }
+                else
+                {
+                    if (p->right)
+                        p = p->right;
+                    else
+                    {
+                        p->right = new Node(t);
+                        return;
+                    }
+                }
+            }
+        }
+    }
     void DeleteByMerging(BSNode<T> *&);
     void FindAndDeleteByMerging(const T &);
     void DeleteByCopying(BSNode<T> *&);

@@ -21,5 +21,5 @@ class Stack : protected DoubleLinkedList<T>
         auto state = this->DeleteFromTail(result);
         return result;
     }
-}
+};
 } // namespace DS

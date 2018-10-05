@@ -11,9 +11,6 @@
 
 #include "ParameterParse.h"
 
-int TestCase = 100;
-int TestRange = 100;
-
 #define SHOW_LIST(arr)        \
     std::cout << #arr << ":"; \
     arr.show(std::cout);      \
@@ -23,35 +20,55 @@ int TestRange = 100;
     std::cout << #value << ":"; \
     std::cout << value;         \
     std::cout << std::endl;
-static char* CommandList[] = {
+static char *CommandList[] = {
     "AddToHead",
     "DeleteFromHead",
     "AddToTail",
     "DeleteFromTail",
-    "DeleteElement"
-};
+    "DeleteElement"};
 #define CONFIG_STR_DEFINE(str) \
-    const std::string str = "--"#str;
-int main(int argc, char** argv)
+    const std::string str = "--" #str;
+int main(int argc, char **argv)
 {
-    CONFIG_STR_DEFINE(longtest);
-    CONFIG_STR_DEFINE(longlongtest);
+    CONFIG_STR_DEFINE(test_case);
+    CONFIG_STR_DEFINE(test_range);
+
+    CONFIG_STR_DEFINE(enable_all_case);
+    CONFIG_STR_DEFINE(enable_single_linked_list);
+    CONFIG_STR_DEFINE(enable_double_linked_list);
+    CONFIG_STR_DEFINE(enable_looped_linked_list);
+
+    DS::global_config.RegValue(test_case, 100);
+    DS::global_config.RegValue(test_range, 100);
+    DS::global_config.RegValue(enable_all_case, "TRUE");
+    DS::global_config.RegValue(enable_single_linked_list, "TRUE");
+    DS::global_config.RegValue(enable_double_linked_list, "TRUE");
+    DS::global_config.RegValue(enable_looped_linked_list, "TRUE");
 
     DS::global_config.Init(argc, argv);
 
+    DS::global_config.ShowDefault(std::cout);
 
-    if(DS::global_config.EnableValue(longtest))
-    {
-        TestCase*=TestCase;
-        TestRange=TestCase;
-    }
-    if(DS::global_config.EnableValue(longlongtest))
-    {
-        TestCase*=(TestCase*10);
-        TestRange=TestCase;
-    }
+    int TestCase = DS::global_config.GetAnyValue(test_case);
+    int TestRange = DS::global_config.GetAnyValue(test_range);
+    bool EnableAllCase = DS::global_config.GetAnyValue(enable_all_case);
+    bool benable_single_linked_list = DS::global_config.GetAnyValue(enable_single_linked_list);
+    bool benable_double_linked_list = DS::global_config.GetAnyValue(enable_double_linked_list);
+    bool benable_looped_linked_list = DS::global_config.GetAnyValue(enable_looped_linked_list);
+
+    // SHOW(TestCase);
+    // SHOW(TestRange);
+    // SHOW(EnableAllCase);
+
+    // SHOW(benable_single_linked_list);
+    // SHOW(benable_double_linked_list);
+    // SHOW(benable_looped_linked_list);
+
     std::srand(std::time(nullptr));
 
+    if(!EnableAllCase) return 0;
+    
+    if(benable_single_linked_list)
     {
         DS::SingleLinkedList<int> slli;
         SHOW_LIST(slli);
@@ -90,6 +107,7 @@ int main(int argc, char** argv)
         }
     }
 
+    if(benable_double_linked_list)
     {
         DS::DoubleLinkedList<int> dlli;
         SHOW_LIST(dlli);
@@ -128,6 +146,7 @@ int main(int argc, char** argv)
         }
     }
 
+    if(benable_looped_linked_list)
     {
         DS::LoopLinkedList<int> llli;
         SHOW_LIST(llli);

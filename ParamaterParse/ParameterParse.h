@@ -2,8 +2,10 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include "xt_quick_cast.h"
+#include "xt_any_value.h"
 
 namespace DS
 {
@@ -36,6 +38,7 @@ class ParameterParse
             mis[index] = key;
         }
     }
+
     template <class T>
     T GetValue(const std::string &key)
     {
@@ -74,26 +77,19 @@ class ParameterParse
         }
         return result;
     }
-    bool EnableValue(const std::string &key)
+    XT::AnyValue GetAnyValue(const std::string &key)
     {
-
-        auto msi_it = msi.find(key);
-        if (msi_it != msi.end())
+        return this->GetValue<std::string>(key);
+    }
+    void ShowDefault(std::ostream &os)
+    {
+        os << FixedWidth("key", 40);
+        os << FixedWidth("default value", 40) << "\n";
+        for (auto &&data : default_value)
         {
-            return true;
+            os << FixedWidth(data.first, 40);
+            os << FixedWidth(data.second, 40) << "\n";
         }
-        else
-        {
-            auto default_value_it = default_value.find(key);
-            if (default_value_it != default_value.end())
-            {
-                return QCast<bool>(default_value_it->second);
-            }
-            else
-            {
-            }
-        }
-        return false;
     }
 };
 extern ParameterParse global_config;
