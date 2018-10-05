@@ -39,6 +39,8 @@ class ParameterParse
         }
     }
 
+
+    
     template <class T>
     T GetValue(const std::string &key)
     {
@@ -77,10 +79,32 @@ class ParameterParse
         }
         return result;
     }
-    XT::AnyValue GetAnyValue(const std::string &key)
+    XT::AnyValue GetAnyValue(const std::string& key)
     {
         return this->GetValue<std::string>(key);
     }
+    bool EnableValue(const std::string &key)
+    {
+
+        auto msi_it = msi.find(key);
+        if (msi_it != msi.end())
+        {
+            return true;
+        }
+        else
+        {
+            auto default_value_it = default_value.find(key);
+            if (default_value_it != default_value.end())
+            {
+                return QCast<bool>(default_value_it->second);
+            }
+            else
+            {
+            }
+        }
+        return false;
+    }
+
     void ShowDefault(std::ostream &os)
     {
         os << FixedWidth("key", 40);

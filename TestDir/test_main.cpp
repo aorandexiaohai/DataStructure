@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 {
     CONFIG_STR_DEFINE(test_case);
     CONFIG_STR_DEFINE(test_range);
+    CONFIG_STR_DEFINE(help);
 
     CONFIG_STR_DEFINE(enable_all_case);
     CONFIG_STR_DEFINE(enable_single_linked_list);
@@ -41,20 +42,24 @@ int main(int argc, char **argv)
     DS::global_config.RegValue(test_case, 100);
     DS::global_config.RegValue(test_range, 100);
     DS::global_config.RegValue(enable_all_case, "TRUE");
-    DS::global_config.RegValue(enable_single_linked_list, "TRUE");
-    DS::global_config.RegValue(enable_double_linked_list, "TRUE");
-    DS::global_config.RegValue(enable_looped_linked_list, "TRUE");
+    DS::global_config.RegValue(enable_single_linked_list, "FALSE");
+    DS::global_config.RegValue(enable_double_linked_list, "FALSE");
+    DS::global_config.RegValue(enable_looped_linked_list, "FALSE");
+    DS::global_config.RegValue(help, "false");
 
     DS::global_config.Init(argc, argv);
-
-    DS::global_config.ShowDefault(std::cout);
-
     int TestCase = DS::global_config.GetAnyValue(test_case);
     int TestRange = DS::global_config.GetAnyValue(test_range);
     bool EnableAllCase = DS::global_config.GetAnyValue(enable_all_case);
     bool benable_single_linked_list = DS::global_config.GetAnyValue(enable_single_linked_list);
     bool benable_double_linked_list = DS::global_config.GetAnyValue(enable_double_linked_list);
     bool benable_looped_linked_list = DS::global_config.GetAnyValue(enable_looped_linked_list);
+    bool bhelp = DS::global_config.EnableValue(help);
+    if (bhelp)
+    {
+        DS::global_config.ShowDefault(std::cout);
+        return 0;
+    }
 
     // SHOW(TestCase);
     // SHOW(TestRange);
@@ -66,9 +71,10 @@ int main(int argc, char **argv)
 
     std::srand(std::time(nullptr));
 
-    if(!EnableAllCase) return 0;
-    
-    if(benable_single_linked_list)
+    if (!EnableAllCase)
+        return 0;
+
+    if (benable_single_linked_list)
     {
         DS::SingleLinkedList<int> slli;
         SHOW_LIST(slli);
@@ -107,7 +113,7 @@ int main(int argc, char **argv)
         }
     }
 
-    if(benable_double_linked_list)
+    if (benable_double_linked_list)
     {
         DS::DoubleLinkedList<int> dlli;
         SHOW_LIST(dlli);
@@ -146,7 +152,7 @@ int main(int argc, char **argv)
         }
     }
 
-    if(benable_looped_linked_list)
+    if (benable_looped_linked_list)
     {
         DS::LoopLinkedList<int> llli;
         SHOW_LIST(llli);
