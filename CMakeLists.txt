@@ -72,6 +72,9 @@ include_directories(
 include_directories(
     XTUtils
 )
+include_directories(
+    ColorConsole
+)
 
 add_executable(
     test_main

@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "ParameterParse.h"
+#include "ColorConsole.h"
 
 #define SHOW_LIST(arr)        \
     std::cout << #arr << ":"; \
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
     bool bhelp = DS::global_config.EnableValue(help);
     if (bhelp)
     {
-        DS::global_config.ShowDefault(std::cout);
+        DS::global_config.ShowDefault();
         return 0;
     }
 

@@ -6,6 +6,7 @@
 
 #include "xt_quick_cast.h"
 #include "xt_any_value.h"
+#include "ColorConsole.h"
 
 namespace DS
 {
@@ -105,14 +106,14 @@ class ParameterParse
         return false;
     }
 
-    void ShowDefault(std::ostream &os)
+    void ShowDefault()
     {
-        os << FixedWidth("key", 40);
-        os << FixedWidth("default value", 40) << "\n";
+        CConsole(GREEN) << FixedWidth("key", 40);
+        CConsole(GREEN) << FixedWidth("default value", 40) << "\n";
         for (auto &&data : default_value)
         {
-            os << FixedWidth(data.first, 40);
-            os << FixedWidth(data.second, 40) << "\n";
+            CConsole(RED) << FixedWidth(data.first, 40);
+            CConsole(WHITE) << FixedWidth(data.second, 40) << "\n";
         }
     }
 };

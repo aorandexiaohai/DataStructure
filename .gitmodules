@@ -1,3 +1,6 @@
 [submodule "XTUtils"]
 	path = XTUtils
 	url = https://github.com/aorandexiaohai/XTUtils.git
+[submodule "ColorConsole"]
+	path = ColorConsole
+	url = https://github.com/aorandexiaohai/ColorConsole.git
